@@ -1,7 +1,7 @@
 ﻿# Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Екатерина Животова](https://up.htmlacademy.ru/javascript/12/user/516281).
-* Наставник: [Ренат Туктаров].
+* Наставник: [Ренат Туктаров](https://htmlacademy.ru/profile/id408799).
 
 ---
 
