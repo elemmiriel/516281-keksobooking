@@ -1,7 +1,19 @@
 'use strict';
 
-var PIN_WIDTH = 40;
-var PIN_HEIGHT = 40;
+// Размеры пинов с учётом острого конца
+// на будущее: var mainPinWidth = 65;
+var mainPinHeight = 70;
+var pinWidth = 50;
+var pinHeight = 70;
+
+var POPUP_WIDTH = 230;
+var POPUP_MARGIN = 10;
+
+// Диапазон значений для установки пина на карте
+var PIN_MIN_X = 300;
+var PIN_MAX_X = 900;
+var PIN_MIN_Y = 150;
+var PIN_MAX_Y = 500;
 
 var OFFERS_COUNT = 8;
 
@@ -66,13 +78,43 @@ var getFeatures = function () {
   return FEATURES_ARRAY.slice(0, getRandomFromTo(1, FEATURES_ARRAY.length));
 };
 
+// Отрисовка стартовой позиции главного пина в поле адреса
+var setMainPinAddress = function () {
+  var startX = PIN_MAX_X / 2;
+  var startY = PIN_MAX_Y / 2 + mainPinHeight;
+  var noticeAddress = document.querySelector('#address');
+  noticeAddress.value = startX + ', ' + startY;
+  noticeAddress.setAttribute('disabled', 'true');
+};
+
+// Активирует форму и карту после события mouseup на пине
+(function () {
+  var noticeForm = document.querySelector('.notice__form');
+  var fieldArray = noticeForm.querySelectorAll('fieldset');
+  var mainPin = document.querySelector('.map__pin--main');
+  for (var i = 0; i < fieldArray.length; i++) {
+    fieldArray[i].setAttribute('disabled', 'disabled');
+  }
+  var mainPinMouseupHandler = function () {
+    document.querySelector('.map').classList.remove('map--faded');
+    noticeForm.classList.remove('notice__form--disabled');
+    for (i = 0; i < fieldArray.length; i++) {
+      fieldArray[i].removeAttribute('disabled');
+    }
+    setMainPinAddress();
+    setupPins();
+    mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
+  };
+  mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+})();
+
+// Генерация объявлений
 var generateOffers = function () {
   var offers = [];
   OFFER_TITLES.sort(compareRandom); // Для неповторяющихся заголовков в рандомном порядке
-  // var addressArray = getAddress();
   for (var i = 0; i < OFFERS_COUNT; i++) {
-    var locX = getRandomFromTo(300, 900);
-    var locY = getRandomFromTo(150, 500);
+    var locX = getRandomFromTo(PIN_MIN_X, PIN_MAX_X);
+    var locY = getRandomFromTo(PIN_MIN_Y, PIN_MAX_Y);
     offers.push({
       author: {
         avatar: getAvatar(i)
@@ -99,19 +141,30 @@ var generateOffers = function () {
   return offers;
 };
 
-var showMap = function () {
-  var mapBlock = document.querySelector('.map');
-  mapBlock.classList.remove('map--faded');
-};
+// Сгенерировать похожие объявления
+var offersArray = generateOffers();
 
-
+// Отрисовка пинов
 var renderPins = function (renderingOffer) {
   var pinTemplate = document.querySelector('template').content;
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.querySelector('.popup__avatar').src = renderingOffer.author.avatar;
-  pinElement.querySelector('h3').textContent = renderingOffer.offer.title;
-  pinElement.querySelector('small').textContent = renderingOffer.offer.address;
-  pinElement.querySelector('.popup__price').textContent = renderingOffer.offer.price + ' \u20bd/ночь';
+  var pinIcon = pinElement.querySelector('.map__pin');
+  pinIcon.querySelector('img').src = renderingOffer.author.avatar;
+  pinIcon.style.left = (renderingOffer.location.x + pinWidth / 2) + 'px';
+  pinIcon.style.top = (renderingOffer.location.y + pinHeight) + 'px';
+  pinIcon.addEventListener('click', pinIconClickHandler);
+  return pinIcon;
+};
+
+// Отрисовка попап объявлений
+var renderPopup = function (renderingOffer) {
+  var popTemplate = document.querySelector('template').content;
+  var popTemp = popTemplate.cloneNode(true);
+  var popElement = popTemp.querySelector('.map__card');
+  popElement.querySelector('.popup__avatar').src = renderingOffer.author.avatar;
+  popElement.querySelector('h3').textContent = renderingOffer.offer.title;
+  popElement.querySelector('small').textContent = renderingOffer.offer.address;
+  popElement.querySelector('.popup__price').textContent = renderingOffer.offer.price + ' \u20bd/ночь';
   var getRuType = function (type) {
     if (type === 'flat') {
       return 'Квартира';
@@ -121,38 +174,49 @@ var renderPins = function (renderingOffer) {
     }
     return 'Дом';
   };
-
-  pinElement.querySelector('h4').textContent = getRuType(renderingOffer.offer.type);
-
+  popElement.querySelector('h4').textContent = getRuType(renderingOffer.offer.type);
   var elemStr = renderingOffer.offer.rooms + ' комнаты для ' + renderingOffer.offer.guests + ' гостей';
-  pinElement.querySelectorAll('p')[2].textContent = elemStr;
-
+  popElement.querySelectorAll('p')[2].textContent = elemStr;
   elemStr = 'Заезд после ' + renderingOffer.offer.checkin + ', выезд до ' + renderingOffer.offer.checkout;
-  pinElement.querySelectorAll('p')[3].textContent = elemStr;
-
-  var featuresElement = pinElement.querySelector('.popup__features');
+  popElement.querySelectorAll('p')[3].textContent = elemStr;
+  var featuresElement = popElement.querySelector('.popup__features');
   featuresElement.innerHTML = '';
   for (var m = 0; m < renderingOffer.offer.features.length; m++) {
     elemStr = '<li class="feature feature--' + renderingOffer.offer.features[m] + '"></li>';
     featuresElement.insertAdjacentHTML('afterbegin', elemStr);
   }
-
-  pinElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
-
-  var photosElement = pinElement.querySelector('.popup__pictures');
+  popElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
+  var photosElement = popElement.querySelector('.popup__pictures');
+  photosElement.innerHTML = '';
   for (m = 0; m < renderingOffer.offer.photos.length; m++) {
-    elemStr = '<li><img src="' + renderingOffer.offer.photos[m] + '" width="70" height="70" ></li>';
+    var elemWidth = (POPUP_WIDTH - 2 * POPUP_MARGIN) / renderingOffer.offer.photos.length;
+    var elemHeight = 70;
+    elemStr = '<li><img src="' + renderingOffer.offer.photos[m] + '" width="' + elemWidth + 'height="' + elemHeight + '" ></li>';
     photosElement.insertAdjacentHTML('afterbegin', elemStr);
   }
-  var pinIcon = pinElement.querySelector('.map__pin');
-  pinIcon.querySelector('img').src = renderingOffer.author.avatar;
-  pinIcon.style.left = (renderingOffer.location.x + PIN_WIDTH / 2) + 'px';
-  pinIcon.style.top = (renderingOffer.location.y + PIN_HEIGHT) + 'px';
-  return pinElement;
+  return popElement;
 };
 
+// Обработчик клика по пину похожего объявления
+var pinIconClickHandler = function (evt) {
+  var targetPin = evt.target;
+  // Проверка нужна для того, чтобы клик адекватно работал на всём пине
+  var noticeImg;
+  if (!targetPin.firstChild) {
+    noticeImg = targetPin.src;
+  } else {
+    noticeImg = targetPin.firstChild.src;
+  }
+  noticeImg.toString();
+  var num = (noticeImg[noticeImg.length - 5] - 1);
+  var fragment = document.createDocumentFragment();
+  var similarListElement = document.querySelector('.map__pins');
+  fragment.appendChild(renderPopup(offersArray[num]));
+  similarListElement.appendChild(fragment);
+};
+
+// Установка пинов похожих объявлений по карте
 var setupPins = function () {
-  var offersArray = generateOffers();
   var fragment = document.createDocumentFragment();
   var similarListElement = document.querySelector('.map__pins');
   for (var n = 0; n < offersArray.length; n++) {
@@ -160,7 +224,3 @@ var setupPins = function () {
   }
   similarListElement.appendChild(fragment);
 };
-
-showMap();
-setupPins();
-
