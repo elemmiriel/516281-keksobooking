@@ -88,7 +88,7 @@ var setMainPinAddress = function () {
 };
 
 // Активирует форму и карту после события mouseup на пине
-(function () {
+var activateMainPin = function () {
   var noticeForm = document.querySelector('.notice__form');
   var fieldArray = noticeForm.querySelectorAll('fieldset');
   var mainPin = document.querySelector('.map__pin--main');
@@ -106,7 +106,7 @@ var setMainPinAddress = function () {
     mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
   };
   mainPin.addEventListener('mouseup', mainPinMouseupHandler);
-})();
+};
 
 // Генерация объявлений
 var generateOffers = function () {
@@ -140,6 +140,7 @@ var generateOffers = function () {
   }
   return offers;
 };
+activateMainPin();
 
 // Сгенерировать похожие объявления
 var offersArray = generateOffers();
@@ -180,20 +181,25 @@ var renderPopup = function (renderingOffer) {
   elemStr = 'Заезд после ' + renderingOffer.offer.checkin + ', выезд до ' + renderingOffer.offer.checkout;
   popElement.querySelectorAll('p')[3].textContent = elemStr;
   var featuresElement = popElement.querySelector('.popup__features');
-  featuresElement.innerHTML = '';
+  while (featuresElement.firstChild) { // чистим перечень удобств из шаблона
+    featuresElement.removeChild(featuresElement.firstChild);
+  }
   for (var m = 0; m < renderingOffer.offer.features.length; m++) {
-    elemStr = '<li class="feature feature--' + renderingOffer.offer.features[m] + '"></li>';
-    featuresElement.insertAdjacentHTML('afterbegin', elemStr);
+    var feature = document.createElement('li');
+    feature.classList.add('feature');
+    feature.classList.add('feature--' + renderingOffer.offer.features[m]);
+    featuresElement.appendChild(feature);
   }
   popElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
   var photosElement = popElement.querySelector('.popup__pictures');
-  photosElement.innerHTML = '';
   for (m = 0; m < renderingOffer.offer.photos.length; m++) {
-    var elemWidth = (POPUP_WIDTH - 2 * POPUP_MARGIN) / renderingOffer.offer.photos.length;
-    var elemHeight = 70;
-    elemStr = '<li><img src="' + renderingOffer.offer.photos[m] + '" width="' + elemWidth + 'height="' + elemHeight + '" ></li>';
-    photosElement.insertAdjacentHTML('afterbegin', elemStr);
+    var li = photosElement.querySelector('li').cloneNode(true);
+    li.querySelector('img').src = renderingOffer.offer.photos[m];
+    li.querySelector('img').width = (POPUP_WIDTH - 2 * POPUP_MARGIN) / renderingOffer.offer.photos.length;
+    li.querySelector('img').height = 70;
+    photosElement.append(li);
   }
+  photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
   return popElement;
 };
 
@@ -201,12 +207,7 @@ var renderPopup = function (renderingOffer) {
 var pinIconClickHandler = function (evt) {
   var targetPin = evt.target;
   // Проверка нужна для того, чтобы клик адекватно работал на всём пине
-  var noticeImg;
-  if (!targetPin.firstChild) {
-    noticeImg = targetPin.src;
-  } else {
-    noticeImg = targetPin.firstChild.src;
-  }
+  var noticeImg = targetPin.firstChild ? targetPin.firstChild.src : targetPin.src;
   noticeImg.toString();
   var num = (noticeImg[noticeImg.length - 5] - 1);
   var fragment = document.createDocumentFragment();
