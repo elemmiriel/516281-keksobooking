@@ -34,7 +34,6 @@ var PALACE_MIN_PRICE = 10000;
       target.setCustomValidity('');
     }
   });
-  
 
   // Цена за ночь
   price.setAttribute('required', 'true');
@@ -139,13 +138,4 @@ var PALACE_MIN_PRICE = 10000;
   };
   rooms.addEventListener('click', selectClickHandler);
   capacity.addEventListener('click', selectClickHandler);
-  
-  var submitButton = document.querySelector('.form__submit');
-  var resetButton = document.querySelector('.form__reset');
-  
-  
-  var setRedBorders = function() {
-    document.querySelectorAll('input').querySelector(':focus').style = 'border: 5px dashed red';
-  };
-  
 })();
