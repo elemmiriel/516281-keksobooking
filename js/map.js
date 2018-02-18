@@ -145,6 +145,41 @@ activateMainPin();
 // Сгенерировать похожие объявления
 var offersArray = generateOffers();
 
+var renderPhotos = function (element, renderingOffer) {
+  var photosElement = element.querySelector('.popup__pictures');
+  for (var m = 0; m < renderingOffer.offer.photos.length; m++) {
+    var li = photosElement.querySelector('li').cloneNode(true);
+    li.querySelector('img').src = renderingOffer.offer.photos[m];
+    li.querySelector('img').width = (POPUP_WIDTH - 2 * POPUP_MARGIN) / renderingOffer.offer.photos.length;
+    li.querySelector('img').height = 70;
+    photosElement.append(li);
+  }
+  photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
+};
+
+var renderFeatures = function (element, renderingOffer) {
+  var featuresElement = element.querySelector('.popup__features');
+  while (featuresElement.firstChild) { // чистим перечень удобств из шаблона
+    featuresElement.removeChild(featuresElement.firstChild);
+  }
+  for (var m = 0; m < renderingOffer.offer.features.length; m++) {
+    var feature = document.createElement('li');
+    feature.classList.add('feature');
+    feature.classList.add('feature--' + renderingOffer.offer.features[m]);
+    featuresElement.appendChild(feature);
+  }
+};
+
+var getRuType = function (type) {
+  if (type === 'flat') {
+    return 'Квартира';
+  }
+  if (type === 'bungalo') {
+    return 'Бунгало';
+  }
+  return 'Дом';
+};
+
 // Отрисовка пинов
 var renderPins = function (renderingOffer) {
   var pinTemplate = document.querySelector('template').content;
@@ -198,41 +233,6 @@ var setupPins = function () {
     fragment.appendChild(renderPins(offersArray[n]));
   }
   similarListElement.appendChild(fragment);
-};
-
-var renderPhotos = function (element, renderingOffer) {
-  var photosElement = element.querySelector('.popup__pictures');
-  for (var m = 0; m < renderingOffer.offer.photos.length; m++) {
-    var li = photosElement.querySelector('li').cloneNode(true);
-    li.querySelector('img').src = renderingOffer.offer.photos[m];
-    li.querySelector('img').width = (POPUP_WIDTH - 2 * POPUP_MARGIN) / renderingOffer.offer.photos.length;
-    li.querySelector('img').height = 70;
-    photosElement.append(li);
-  }
-  photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
-};
-
-var renderFeatures = function (element, renderingOffer) {
-  var featuresElement = element.querySelector('.popup__features');
-  while (featuresElement.firstChild) { // чистим перечень удобств из шаблона
-    featuresElement.removeChild(featuresElement.firstChild);
-  }
-  for (var m = 0; m < renderingOffer.offer.features.length; m++) {
-    var feature = document.createElement('li');
-    feature.classList.add('feature');
-    feature.classList.add('feature--' + renderingOffer.offer.features[m]);
-    featuresElement.appendChild(feature);
-  }
-};
-
-var getRuType = function (type) {
-  if (type === 'flat') {
-    return 'Квартира';
-  }
-  if (type === 'bungalo') {
-    return 'Бунгало';
-  }
-  return 'Дом';
 };
 
 var validateForm = function () {
