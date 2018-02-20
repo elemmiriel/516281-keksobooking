@@ -146,4 +146,10 @@
   };
   window.formFields.rooms.addEventListener('click', selectClickHandler);
   window.formFields.capacity.addEventListener('click', selectClickHandler);
+
+  var resetButton = document.querySelector('.form__reset');
+  resetButton.addEventListener('click', function () {
+    window.formFields.noticeForm.reset();
+    window.disableMainPin();
+  });
 })();

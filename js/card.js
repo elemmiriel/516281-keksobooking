@@ -9,15 +9,15 @@
   window.POPUP_WIDTH = 230;
   window.POPUP_MARGIN = 10;
 
-  window.isEscEvent = function (evt, action) {
+  window.isEscEvent = function (evt, func) {
     if (evt.keyCode === ESC_KEYCODE) {
-      action();
+      func();
     }
   };
 
-  window.isEnterEvent = function (evt, action) {
+  window.isEnterEvent = function (evt, func) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      action();
+      func();
     }
   };
 
