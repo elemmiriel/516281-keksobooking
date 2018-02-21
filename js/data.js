@@ -42,6 +42,11 @@
     'conditioner'
   ];
 
+  window.pinSize = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
+
   // Для неповторяющихся значений в случайном порядке
   var compareRandom = function () {
     return Math.random() - 0.5;
@@ -77,7 +82,7 @@
         },
         offer: {
           title: OFFER_TITLES[i],
-          address: locX + ', ' + locY,
+          address: (locX + (window.pinSize.WIDTH / 2)) + ', ' + (locY + (window.pinSize.HEIGHT)),
           price: getRandomFromTo(1000, 1000000),
           type: TYPES[getRandomFromTo(0, 2)],
           rooms: getRandomFromTo(1, 5),

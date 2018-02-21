@@ -1,22 +1,10 @@
 'use strict';
 (function () {
-  // Размеры пинов с учётом острого конца
-  // на будущее: var mainPinWidth = 65;
-  var mainPinHeight = 70;
-
   // Диапазон значений для установки пина на карте
   window.PIN_MIN_X = 300;
   window.PIN_MAX_X = 900;
   window.PIN_MIN_Y = 150;
   window.PIN_MAX_Y = 500;
-
-  // Отрисовка стартовой позиции главного пина в поле адреса
-  var setMainPinAddress = function () {
-    var startX = window.PIN_MAX_X / 2;
-    var startY = window.PIN_MAX_Y / 2 + mainPinHeight;
-    window.formFields.address.value = startX + ', ' + startY;
-    window.formFields.address.setAttribute('disabled', 'true');
-  };
 
   // Сгенерировать похожие объявления
   var offersArray = window.generateOffers();
@@ -63,19 +51,19 @@
   };
 
   // Активирует форму и карту после события mouseup на пине
-  var activateMainPin = function () {
+  window.activateMainPin = function () {
     var mainPin = document.querySelector('.map__pin--main');
+    window.activatingCoords = {
+      x: mainPin.offsetLeft,
+      y: mainPin.offsetTop
+    };
     var fieldsArray = window.formFields.fieldset;
-    for (var i = 0; i < fieldsArray.length; i++) {
-      fieldsArray[i].setAttribute('disabled', 'disabled');
-    }
     var mainPinMouseupHandler = function () {
       document.querySelector('.map').classList.remove('map--faded');
       window.formFields.noticeForm.classList.remove('notice__form--disabled');
-      for (i = 0; i < fieldsArray.length; i++) {
+      for (var i = 0; i < fieldsArray.length; i++) {
         fieldsArray[i].removeAttribute('disabled');
       }
-      setMainPinAddress();
       setupPins();
       mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     };
@@ -85,5 +73,27 @@
     });
   };
 
-  activateMainPin();
+  window.disableMainPin = function () {
+    var fieldsArray = window.formFields.fieldset;
+    for (var i = 0; i < fieldsArray.length; i++) {
+      fieldsArray[i].setAttribute('disabled', 'disabled');
+    }
+    document.querySelector('.map').classList.add('map--faded');
+    window.formFields.noticeForm.classList.add('notice__form--disabled');
+    var pins = document.querySelector('.map__pins').querySelectorAll('.map__pin');
+    for (i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+    var card = document.querySelector('.map__pins').querySelector('article');
+    if (card) {
+      card.remove();
+    }
+    document.querySelector('.map__pin--main').style.left = window.activatingCoords.x + 'px';
+    document.querySelector('.map__pin--main').style.top = window.activatingCoords.y + 'px';
+    window.setMainPinAddress(window.activatingCoords.x, window.activatingCoords.y);
+    window.activateMainPin();
+  };
+  window.activateMainPin();
 })();
