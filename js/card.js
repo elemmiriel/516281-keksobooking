@@ -23,6 +23,9 @@
 
   var renderPhotos = function (element, renderingOffer) {
     var photosElement = element.querySelector('.popup__pictures');
+    if (renderingOffer.offer.photos.length > 3) {
+      renderingOffer.offer.photos.length = 3; // обрезаем лишние фото
+    }
     for (var m = 0; m < renderingOffer.offer.photos.length; m++) {
       var li = photosElement.querySelector('li').cloneNode(true);
       li.querySelector('img').src = renderingOffer.offer.photos[m];
