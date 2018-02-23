@@ -152,4 +152,18 @@
     window.formFields.noticeForm.reset();
     window.disableMainPin();
   });
+
+  var successHandler = function () {
+    window.formFields.noticeForm.reset();
+    window.disableMainPin();
+  };
+
+  var form = window.formFields.noticeForm;
+  form.addEventListener('submit', function (evt) {
+    // Для того, чтобы поле адрес отправился серверу, включаем его
+    window.formFields.address.removeAttribute('disabled');
+    window.upload(new FormData(form), successHandler, window.errorHandler);
+    evt.preventDefault();
+  });
+
 })();

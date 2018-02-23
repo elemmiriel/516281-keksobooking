@@ -6,8 +6,15 @@
   window.PIN_MIN_Y = 150;
   window.PIN_MAX_Y = 500;
 
-  // Сгенерировать похожие объявления
-  var offersArray = window.generateOffers();
+  var offersArray;
+
+  // Загрузить похожие объявления
+  var getOffers = function (data) {
+    offersArray = data;
+  };
+
+
+  window.download(getOffers, window.errorHandler);
 
   var closePopup = function () {
     var similarListElement = document.querySelector('.map__pins');
@@ -21,9 +28,8 @@
   window.pinIconClickHandler = function (evt) {
     var targetPin = evt.target;
     // Проверка нужна для того, чтобы клик адекватно работал на всём пине
-    var noticeImg = targetPin.firstChild ? targetPin.firstChild.src : targetPin.src;
-    noticeImg.toString();
-    var num = (noticeImg[noticeImg.length - 5] - 1);
+    var num = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
+
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
     closePopup();
@@ -49,19 +55,21 @@
     }
     similarListElement.appendChild(fragment);
   };
-
+  var mainPin = document.querySelector('.map__pin--main');
+  window.activatingCoords = {
+    x: mainPin.offsetLeft,
+    y: mainPin.offsetTop
+  };
   // Активирует форму и карту после события mouseup на пине
   window.activateMainPin = function () {
-    var mainPin = document.querySelector('.map__pin--main');
-    window.activatingCoords = {
-      x: mainPin.offsetLeft,
-      y: mainPin.offsetTop
-    };
     var fieldsArray = window.formFields.fieldset;
+    for (var i = 0; i < fieldsArray.length; i++) {
+      fieldsArray[i].setAttribute('disabled', 'disabled');
+    }
     var mainPinMouseupHandler = function () {
       document.querySelector('.map').classList.remove('map--faded');
       window.formFields.noticeForm.classList.remove('notice__form--disabled');
-      for (var i = 0; i < fieldsArray.length; i++) {
+      for (i = 0; i < fieldsArray.length; i++) {
         fieldsArray[i].removeAttribute('disabled');
       }
       setupPins();
