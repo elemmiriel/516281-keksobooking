@@ -6,13 +6,23 @@
   window.PIN_MIN_Y = 150;
   window.PIN_MAX_Y = 500;
 
+  window.PINS_COUNT = 5;
+
+  window.MainPinSizes = {
+    WIDTH: 64,
+    HEIGHT: 70
+  };
+
+  var MAX_CHILD = 5;
+
   var offersArray;
 
   // Загрузить похожие объявления
   var getOffers = function (data) {
     offersArray = data;
+    window.activateMainPin();
+    document.querySelector('.map__filters').addEventListener('click', window.filtrate(offersArray));
   };
-
 
   window.download(getOffers, window.errorHandler);
 
@@ -29,11 +39,14 @@
     var targetPin = evt.target;
     // Проверка нужна для того, чтобы клик адекватно работал на всём пине
     var num = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
-
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
     closePopup();
-    fragment.appendChild(window.renderPopup(offersArray[num]));
+    if (typeof window.results === 'undefined') {
+      fragment.appendChild(window.renderPopup(offersArray[num])); // фильтр не установлен
+    } else {
+      fragment.appendChild(window.renderPopup(window.results[num])); // только фильтрованное
+    }
     similarListElement.appendChild(fragment);
 
     var closeButton = document.querySelector('.map__pins').querySelector('.popup__close');
@@ -47,19 +60,35 @@
   };
 
   // Установка пинов похожих объявлений по карте
-  var setupPins = function () {
+  window.setupPins = function (array) {
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
-    for (var n = 0; n < offersArray.length; n++) {
-      fragment.appendChild(window.renderPins(offersArray[n]));
+    for (var n = 0; n < array.length; n++) {
+      fragment.appendChild(window.renderPins(array[n]));
     }
     similarListElement.appendChild(fragment);
   };
+
+  window.removeElements = function () {
+    var pins = document.querySelector('.map__pins').querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+    window.buttonId = 0;
+    var card = document.querySelector('.map__pins').querySelector('article');
+    if (card) {
+      card.remove();
+    }
+  };
+
   var mainPin = document.querySelector('.map__pin--main');
   window.activatingCoords = {
     x: mainPin.offsetLeft,
     y: mainPin.offsetTop
   };
+
   // Активирует форму и карту после события mouseup на пине
   window.activateMainPin = function () {
     var fieldsArray = window.formFields.fieldset;
@@ -72,7 +101,12 @@
       for (i = 0; i < fieldsArray.length; i++) {
         fieldsArray[i].removeAttribute('disabled');
       }
-      setupPins();
+      if (offersArray.length > 5) {
+        var copy = offersArray.slice(0, 5);
+        window.setupPins(copy);
+      } else {
+        window.setupPins(offersArray);
+      }
       mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     };
     mainPin.addEventListener('mouseup', mainPinMouseupHandler);
@@ -81,6 +115,7 @@
     });
   };
 
+  // Сбросить форму и карту
   window.disableMainPin = function () {
     var fieldsArray = window.formFields.fieldset;
     for (var i = 0; i < fieldsArray.length; i++) {
@@ -88,20 +123,11 @@
     }
     document.querySelector('.map').classList.add('map--faded');
     window.formFields.noticeForm.classList.add('notice__form--disabled');
-    var pins = document.querySelector('.map__pins').querySelectorAll('.map__pin');
-    for (i = 0; i < pins.length; i++) {
-      if (!pins[i].classList.contains('map__pin--main')) {
-        pins[i].remove();
-      }
-    }
-    var card = document.querySelector('.map__pins').querySelector('article');
-    if (card) {
-      card.remove();
-    }
+    window.removeElements();
+    window.resetFilters();
     document.querySelector('.map__pin--main').style.left = window.activatingCoords.x + 'px';
     document.querySelector('.map__pin--main').style.top = window.activatingCoords.y + 'px';
     window.setMainPinAddress(window.activatingCoords.x, window.activatingCoords.y);
     window.activateMainPin();
   };
-  window.activateMainPin();
 })();

@@ -57,13 +57,13 @@
       mainPin.style.left = window.mainPinCoords.x + 'px';
       mainPin.style.top = window.mainPinCoords.y + 'px';
 
-      window.setMainPinAddress(window.mainPinCoords.x, window.mainPinCoords.y);
+      window.setMainPinAddress(window.mainPinCoords.x + window.MainPinSizes.WIDTH / 2, window.mainPinCoords.y + window.MainPinSizes.HEIGHT);
 
     };
 
     var mouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
-      window.setMainPinAddress(window.mainPinCoords.x, window.mainPinCoords.y);
+      window.setMainPinAddress(window.mainPinCoords.x + window.MainPinSizes.WIDTH / 2, window.mainPinCoords.y + window.MainPinSizes.HEIGHT);
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
     };
