@@ -13,8 +13,6 @@
     HEIGHT: 70
   };
 
-  var MAX_CHILD = 5;
-
   var offersArray;
 
   // Загрузить похожие объявления

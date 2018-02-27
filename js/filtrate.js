@@ -128,17 +128,14 @@
     };
 
     var toFiltrate = function () {
-      console.log(enabledFilters);
       window.results = array.filter(function (value) {
         var c = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
         ((enabledFilters.rooms === 'any') || (getRoomsFilter(enabledFilters.rooms, value.offer.rooms))) &&
         ((enabledFilters.capacity === 'any') || (getGuestsFilter(enabledFilters.capacity, value.offer.guests)))) &&
         ((enabledFilters.features === []) || (getFeaturesFilter(value)));
-        console.log(c);
         return c;
       });
-      console.log(window.results.length);
       if (window.results.length > 5) {
         window.results.length = 5;
       }
