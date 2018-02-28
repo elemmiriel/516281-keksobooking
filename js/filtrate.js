@@ -18,15 +18,10 @@
     features: []
   };
 
-
   window.filtrate = function (array) {
     var changeTypeHandler = function (evt) {
       enabledFilters.type = evt.target.value;
-      window.removeElements();
-      var func = function () {
-        window.setupPins(toFiltrate());
-      };
-      window.debounce(func);
+      window.debounce(reloadPins);
     };
 
     var getPriceFilter = function (value, price) {
@@ -44,11 +39,7 @@
 
     var changePriceHandler = function (evt) {
       enabledFilters.price = evt.target.value;
-      window.removeElements();
-      var func = function () {
-        window.setupPins(toFiltrate());
-      };
-      window.debounce(func);
+      window.debounce(reloadPins);
     };
 
     var getRoomsFilter = function (value, rooms) {
@@ -66,11 +57,7 @@
 
     var changeRoomsHandler = function (evt) {
       enabledFilters.rooms = evt.target.value;
-      window.removeElements();
-      var func = function () {
-        window.setupPins(toFiltrate());
-      };
-      window.debounce(func);
+      window.debounce(reloadPins);
     };
 
     var getGuestsFilter = function (value, guests) {
@@ -86,11 +73,7 @@
 
     var changeCapacityHandler = function (evt) {
       enabledFilters.capacity = evt.target.value;
-      window.removeElements();
-      var func = function () {
-        window.setupPins(toFiltrate());
-      };
-      window.debounce(func);
+      window.debounce(reloadPins);
     };
 
     var getFeaturesFilter = function (value) {
@@ -119,12 +102,7 @@
           enabledFilters.features.splice(n, 1);
         }
       }
-      window.removeElements();
-      var func = function () {
-        window.setupPins(toFiltrate());
-      };
-      window.debounce(func);
-
+      window.debounce(reloadPins);
     };
 
     var toFiltrate = function () {
@@ -136,10 +114,13 @@
         ((enabledFilters.features === []) || (getFeaturesFilter(value)));
         return c;
       });
-      if (window.results.length > 5) {
-        window.results.length = 5;
-      }
+      window.results = window.results.slice(0, Math.min(5, window.results.length));
       return window.results;
+    };
+
+    var reloadPins = function () {
+      window.removeElements();
+      window.setupPins(toFiltrate());
     };
 
     Filters.FEATURES.addEventListener('click', checkFeatureHandler);
@@ -159,5 +140,4 @@
       checkboxes[i].checked = false;
     }
   };
-
 })();
