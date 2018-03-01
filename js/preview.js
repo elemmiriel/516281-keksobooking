@@ -19,6 +19,7 @@
 
       reader.addEventListener('load', function () {
         preview.src = reader.result;
+        preview.style.borderRadius = '4px';
       });
 
       reader.readAsDataURL(file);
@@ -55,6 +56,7 @@
 
         reader.addEventListener('load', function () {
           preview.src = reader.result;
+          preview.style.borderRadius = '4px';
         });
 
         reader.readAsDataURL(file);
@@ -90,9 +92,10 @@
             var img = document.createElement('img');
             img.classList.add('photo_preview');
             img.src = reader.result;
-            img.style.width = '70px';
-            img.style.height = '70px';
-            img.setAttribute('draggable', 'true');
+            img.style.width = '50px';
+            img.style.height = '50px';
+            img.style.border = '2px solid #dadada';
+            img.style.borderRadius = '8px';
             block.appendChild(img);
           });
 
@@ -136,9 +139,10 @@
             var img = document.createElement('img');
             img.classList.add('photo_preview');
             img.src = reader.result;
-            img.style.width = '70px';
-            img.style.height = '70px';
-            img.setAttribute('draggable', 'true');
+            img.style.width = '50px';
+            img.style.height = '50px';
+            img.style.border = '2px solid #dadada';
+            img.style.borderRadius = '8px';
             block.appendChild(img);
           });
 

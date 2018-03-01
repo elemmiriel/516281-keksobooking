@@ -6,8 +6,6 @@
   window.PIN_MIN_Y = 150;
   window.PIN_MAX_Y = 500;
 
-  window.PINS_COUNT = 5;
-
   window.MainPinSizes = {
     WIDTH: 64,
     HEIGHT: 70
@@ -17,11 +15,11 @@
 
   // Загрузить похожие объявления
   var getOffers = function (data) {
-    window.disableMainPin();
     offersArray = data;
-    window.activateMainPin();
     document.querySelector('.map__filters').addEventListener('click', window.filtrate(offersArray));
+    window.disableMainPin();
   };
+
 
   window.download(getOffers, window.errorHandler);
 
@@ -90,13 +88,13 @@
 
   // Активирует форму и карту после события mouseup на пине
   window.activateMainPin = function () {
-    var fieldsArray = window.formFields.fieldset;
+    var fieldsArray = window.FormFields.FIELDSET;
     for (var i = 0; i < fieldsArray.length; i++) {
       fieldsArray[i].setAttribute('disabled', 'disabled');
     }
     var mainPinMouseupHandler = function () {
       document.querySelector('.map').classList.remove('map--faded');
-      window.formFields.noticeForm.classList.remove('notice__form--disabled');
+      window.FormFields.NOTICE_FORM.classList.remove('notice__form--disabled');
       for (i = 0; i < fieldsArray.length; i++) {
         fieldsArray[i].removeAttribute('disabled');
       }
@@ -120,7 +118,8 @@
 
   // Сбросить форму и карту
   window.disableMainPin = function () {
-    var fieldsArray = window.formFields.fieldset;
+    window.activatePinDragging();
+    var fieldsArray = window.FormFields.FIELDSET;
     for (var i = 0; i < fieldsArray.length; i++) {
       fieldsArray[i].setAttribute('disabled', 'disabled');
     }
@@ -129,15 +128,17 @@
       filterArr[i].setAttribute('disabled', 'disabled');
     }
     document.querySelector('.map').classList.add('map--faded');
-    window.formFields.noticeForm.classList.add('notice__form--disabled');
+    window.FormFields.NOTICE_FORM.classList.add('notice__form--disabled');
     window.removeElements();
     window.resetFilters();
     document.querySelector('.map__pin--main').style.left = window.activatingCoords.x + 'px';
     document.querySelector('.map__pin--main').style.top = window.activatingCoords.y + 'px';
     document.querySelector('.notice__preview').querySelector('img').src = 'img/muffin.png'; // удалить аватар
     var photoContainer = document.querySelector('.form__photo-container').querySelector('.form__photo');
-    while (photoContainer.firstChild) {
-      photoContainer.removeChild(photoContainer.firstChild);
+    if (photoContainer) {
+      while (photoContainer.firstChild) {
+        photoContainer.removeChild(photoContainer.firstChild);
+      }
     }
     window.setMainPinAddress(window.activatingCoords.x, window.activatingCoords.y);
     window.activateMainPin();

@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var filterForm = document.querySelector('.map__filters');
+  var FILTER_FORM = document.querySelector('.map__filters');
   var Filters = {
-    TYPE: filterForm.querySelector('#housing-type'),
-    PRICE: filterForm.querySelector('#housing-price'),
-    ROOMS: filterForm.querySelector('#housing-rooms'),
-    CAPACITY: filterForm.querySelector('#housing-guests'),
-    FEATURES: filterForm.querySelector('#housing-features')
+    TYPE: FILTER_FORM.querySelector('#housing-type'),
+    PRICE: FILTER_FORM.querySelector('#housing-price'),
+    ROOMS: FILTER_FORM.querySelector('#housing-rooms'),
+    CAPACITY: FILTER_FORM.querySelector('#housing-guests'),
+    FEATURES: FILTER_FORM.querySelector('#housing-features')
   };
 
   var enabledFilters = {
@@ -107,12 +107,12 @@
 
     var toFiltrate = function () {
       window.results = array.filter(function (value) {
-        var c = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
+        var isResult = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
         ((enabledFilters.rooms === 'any') || (getRoomsFilter(enabledFilters.rooms, value.offer.rooms))) &&
         ((enabledFilters.capacity === 'any') || (getGuestsFilter(enabledFilters.capacity, value.offer.guests)))) &&
         ((enabledFilters.features === []) || (getFeaturesFilter(value)));
-        return c;
+        return isResult;
       });
       window.results = window.results.slice(0, Math.min(5, window.results.length));
       return window.results;
