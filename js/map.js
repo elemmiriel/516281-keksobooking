@@ -17,6 +17,7 @@
 
   // Загрузить похожие объявления
   var getOffers = function (data) {
+    window.disableMainPin();
     offersArray = data;
     window.activateMainPin();
     document.querySelector('.map__filters').addEventListener('click', window.filtrate(offersArray));
@@ -99,6 +100,10 @@
       for (i = 0; i < fieldsArray.length; i++) {
         fieldsArray[i].removeAttribute('disabled');
       }
+      var filterArr = document.querySelector('.map__filters').children;
+      for (i = 0; i < filterArr.length; i++) {
+        filterArr[i].removeAttribute('disabled');
+      }
       if (offersArray.length > 5) {
         var copy = offersArray.slice(0, 5);
         window.setupPins(copy);
@@ -119,12 +124,21 @@
     for (var i = 0; i < fieldsArray.length; i++) {
       fieldsArray[i].setAttribute('disabled', 'disabled');
     }
+    var filterArr = document.querySelector('.map__filters').children;
+    for (i = 0; i < filterArr.length; i++) {
+      filterArr[i].setAttribute('disabled', 'disabled');
+    }
     document.querySelector('.map').classList.add('map--faded');
     window.formFields.noticeForm.classList.add('notice__form--disabled');
     window.removeElements();
     window.resetFilters();
     document.querySelector('.map__pin--main').style.left = window.activatingCoords.x + 'px';
     document.querySelector('.map__pin--main').style.top = window.activatingCoords.y + 'px';
+    document.querySelector('.notice__preview').querySelector('img').src = 'img/muffin.png'; // удалить аватар
+    var photoContainer = document.querySelector('.form__photo-container').querySelector('.form__photo');
+    while (photoContainer.firstChild) {
+      photoContainer.removeChild(photoContainer.firstChild);
+    }
     window.setMainPinAddress(window.activatingCoords.x, window.activatingCoords.y);
     window.activateMainPin();
   };
