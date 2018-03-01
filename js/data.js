@@ -42,7 +42,7 @@
     'conditioner'
   ];
 
-  window.pinSize = {
+  window.PinSize = {
     WIDTH: 50,
     HEIGHT: 70
   };
