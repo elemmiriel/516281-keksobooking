@@ -47,7 +47,7 @@
   window.download = function (onLoad, onError) {
     var URL = loader.src;
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
+    // xhr.responseType = 'json';
     xhr.open('GET', URL);
     xhr.send();
     xhr.timeout = 10000; // 10s
@@ -87,7 +87,7 @@
   window.upload = function (data, onLoad, onError) {
     var URL = uploader.src;
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
+    // xhr.responseType = 'json';
     xhr.open('POST', URL);
     xhr.send(data);
     xhr.timeout = 10000; // 10s

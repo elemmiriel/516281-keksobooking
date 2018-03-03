@@ -11,11 +11,16 @@
     HEIGHT: 70
   };
 
+  window.PinSize = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
+
   var offersArray;
 
   // Загрузить похожие объявления
   var getOffers = function (data) {
-    offersArray = data;
+    offersArray = JSON.parse(data);
     document.querySelector('.map__filters').addEventListener('click', window.filtrate(offersArray));
     window.disableMainPin();
   };
