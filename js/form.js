@@ -39,7 +39,7 @@
   });
 
   // Тип жилья влияет на минимальную цену
-  var priceHandler = function () {
+  var priceChangeHandler = function () {
     if (window.FormFields.TYPE.selectedIndex === 1) {
       window.FormFields.PRICE.setAttribute('min', BUNGALO_MIN_PRICE);
     }
@@ -57,7 +57,7 @@
   // Цена за ночь
   window.FormFields.PRICE.setAttribute('required', 'true');
   window.FormFields.PRICE.setAttribute('max', PRICE_MAX_VALUE);
-  window.FormFields.PRICE.addEventListener('input', priceHandler);
+  window.FormFields.PRICE.addEventListener('input', priceChangeHandler);
   window.FormFields.PRICE.addEventListener('input', function (evt) {
     var target = evt.target;
     if (target.value > PRICE_MAX_VALUE) {
@@ -68,7 +68,7 @@
   });
 
 
-  window.FormFields.TYPE.addEventListener('input', priceHandler);
+  window.FormFields.TYPE.addEventListener('input', priceChangeHandler);
 
   // Адрес заполняется автоматически
   window.FormFields.ADDRESS.setAttribute('disabled', 'true');
@@ -83,16 +83,16 @@
   });
 
   // Поле «Количество комнат» синхронизировано с полем «Количество гостей»
-  var optionsArray = window.FormFields.CAPACITY.querySelectorAll('option');
-  optionsArray[2].setAttribute('selected', 'true');
+  var options = window.FormFields.CAPACITY.querySelectorAll('option');
+  options[2].setAttribute('selected', 'true');
 
   var selectClickHandler = function () {
     if (window.FormFields.ROOMS.selectedIndex === 0) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].setAttribute('disabled', 'true');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
+      options[0].setAttribute('disabled', 'true');
+      options[1].setAttribute('disabled', 'true');
+      options[2].removeAttribute('disabled');
+      options[2].setAttribute('selected', 'true');
+      options[3].setAttribute('disabled', 'true');
       if ((window.FormFields.CAPACITY.selectedIndex === 0) || (window.FormFields.CAPACITY.selectedIndex === 1)) {
         window.FormFields.CAPACITY.setCustomValidity('В 1 комнате может расположиться только 1 гость.');
       } else {
@@ -104,11 +104,11 @@
       }
     }
     if (window.FormFields.ROOMS.selectedIndex === 1) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].removeAttribute('disabled');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
+      options[0].setAttribute('disabled', 'true');
+      options[1].removeAttribute('disabled');
+      options[2].removeAttribute('disabled');
+      options[2].setAttribute('selected', 'true');
+      options[3].setAttribute('disabled', 'true');
       if (window.FormFields.CAPACITY.selectedIndex === 0) {
         window.FormFields.CAPACITY.setCustomValidity('В 2 комнатах могут расположиться не больше 2 гостей');
       } else {
@@ -120,11 +120,11 @@
       }
     }
     if (window.FormFields.ROOMS.selectedIndex === 2) {
-      optionsArray[0].removeAttribute('disabled');
-      optionsArray[1].removeAttribute('disabled');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
+      options[0].removeAttribute('disabled');
+      options[1].removeAttribute('disabled');
+      options[2].removeAttribute('disabled');
+      options[2].setAttribute('selected', 'true');
+      options[3].setAttribute('disabled', 'true');
       if (window.FormFields.CAPACITY.selectedIndex === 3) {
         window.FormFields.CAPACITY.setCustomValidity('Некорректное значение!');
       } else {
@@ -132,11 +132,11 @@
       }
     }
     if (window.FormFields.ROOMS.selectedIndex === 3) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].setAttribute('disabled', 'true');
-      optionsArray[2].setAttribute('disabled', 'true');
-      optionsArray[3].removeAttribute('disabled');
-      optionsArray[3].setAttribute('selected', 'true');
+      options[0].setAttribute('disabled', 'true');
+      options[1].setAttribute('disabled', 'true');
+      options[2].setAttribute('disabled', 'true');
+      options[3].removeAttribute('disabled');
+      options[3].setAttribute('selected', 'true');
       if (window.FormFields.CAPACITY.selectedIndex !== 3) {
         window.FormFields.CAPACITY.setCustomValidity('Некорректное значение! Такое количество комнат не для гостей.');
       } else {
@@ -155,7 +155,7 @@
     window.disableMainPin();
   });
 
-  var successHandler = function () {
+  var successUploadHandler = function () {
     window.FormFields.NOTICE_FORM.reset();
     window.disableMainPin();
   };
@@ -164,7 +164,7 @@
   form.addEventListener('submit', function (evt) {
     // Для того, чтобы поле адрес отправился серверу, включаем его
     window.FormFields.ADDRESS.removeAttribute('disabled');
-    window.upload(new FormData(form), successHandler, window.errorHandler);
+    window.upload(new FormData(form), successUploadHandler, window.errorHandler);
     evt.preventDefault();
   });
 

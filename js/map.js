@@ -16,12 +16,12 @@
     HEIGHT: 70
   };
 
-  var offersArray;
+  var similarOffers;
 
   // Загрузить похожие объявления
   var getOffers = function (data) {
-    offersArray = JSON.parse(data);
-    document.querySelector('.map__filters').addEventListener('click', window.filtrate(offersArray));
+    similarOffers = JSON.parse(data);
+    document.querySelector('.map__filters').addEventListener('click', window.filtrate(similarOffers));
     window.disableMainPin();
   };
 
@@ -40,14 +40,14 @@
   window.pinIconClickHandler = function (evt) {
     var targetPin = evt.target;
     // Проверка нужна для того, чтобы клик адекватно работал на всём пине
-    var num = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
+    var index = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
     closePopup();
     if (typeof window.results === 'undefined') {
-      fragment.appendChild(window.renderPopup(offersArray[num])); // фильтр не установлен
+      fragment.appendChild(window.renderPopup(similarOffers[index])); // фильтр не установлен
     } else {
-      fragment.appendChild(window.renderPopup(window.results[num])); // только фильтрованное
+      fragment.appendChild(window.renderPopup(window.results[index])); // только фильтрованное
     }
     similarListElement.appendChild(fragment);
 
@@ -93,25 +93,25 @@
 
   // Активирует форму и карту после события mouseup на пине
   window.activateMainPin = function () {
-    var fieldsArray = window.FormFields.FIELDSET;
-    for (var i = 0; i < fieldsArray.length; i++) {
-      fieldsArray[i].setAttribute('disabled', 'disabled');
+    var formFields = window.FormFields.FIELDSET;
+    for (var i = 0; i < formFields.length; i++) {
+      formFields[i].setAttribute('disabled', 'disabled');
     }
     var mainPinMouseupHandler = function () {
       document.querySelector('.map').classList.remove('map--faded');
       window.FormFields.NOTICE_FORM.classList.remove('notice__form--disabled');
-      for (i = 0; i < fieldsArray.length; i++) {
-        fieldsArray[i].removeAttribute('disabled');
+      for (i = 0; i < formFields.length; i++) {
+        formFields[i].removeAttribute('disabled');
       }
       var filterArr = document.querySelector('.map__filters').children;
       for (i = 0; i < filterArr.length; i++) {
         filterArr[i].removeAttribute('disabled');
       }
-      if (offersArray.length > 5) {
-        var copy = offersArray.slice(0, 5);
+      if (similarOffers.length > 5) {
+        var copy = similarOffers.slice(0, 5);
         window.setupPins(copy);
       } else {
-        window.setupPins(offersArray);
+        window.setupPins(similarOffers);
       }
       mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     };

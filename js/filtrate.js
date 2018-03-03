@@ -95,17 +95,17 @@
       if (evt.target.className === '') { // Нужна проверка, так как кликаем на инпут и лейбл одновременно
         var target = evt.target;
         var feature = target.value;
-        var n = enabledFilters.features.indexOf(feature);
+        var index = enabledFilters.features.indexOf(feature);
         if (target.checked) {
           enabledFilters.features.push(feature);
         } else {
-          enabledFilters.features.splice(n, 1);
+          enabledFilters.features.splice(index, 1);
         }
       }
       window.debounce(reloadPins);
     };
 
-    var toFiltrate = function () {
+    var enableFilters = function () {
       window.results = array.filter(function (value) {
         var isResult = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
@@ -120,7 +120,7 @@
 
     var reloadPins = function () {
       window.removeElements();
-      window.setupPins(toFiltrate());
+      window.setupPins(enableFilters());
     };
 
     Filters.FEATURES.addEventListener('click', checkFeatureHandler);

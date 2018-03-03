@@ -69,10 +69,10 @@
     popElement.querySelector('small').textContent = renderingOffer.offer.address;
     popElement.querySelector('.popup__price').textContent = renderingOffer.offer.price + ' \u20bd/ночь';
     popElement.querySelector('h4').textContent = getRuType(renderingOffer.offer.type);
-    var elemStr = renderingOffer.offer.rooms + ' комнаты для ' + renderingOffer.offer.guests + ' гостей';
-    popElement.querySelectorAll('p')[2].textContent = elemStr;
-    elemStr = 'Заезд после ' + renderingOffer.offer.checkin + ', выезд до ' + renderingOffer.offer.checkout;
-    popElement.querySelectorAll('p')[3].textContent = elemStr;
+    var text = renderingOffer.offer.rooms + ' комнаты для ' + renderingOffer.offer.guests + ' гостей';
+    popElement.querySelectorAll('p')[2].textContent = text;
+    text = 'Заезд после ' + renderingOffer.offer.checkin + ', выезд до ' + renderingOffer.offer.checkout;
+    popElement.querySelectorAll('p')[3].textContent = text;
     renderFeatures(popElement, renderingOffer);
     popElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
     renderPhotos(popElement, renderingOffer);
