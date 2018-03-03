@@ -18,7 +18,7 @@
     features: []
   };
 
-  window.filtrate = function (array) {
+  window.filtrate = function (offers) {
     var changeTypeHandler = function (evt) {
       enabledFilters.type = evt.target.value;
       window.debounce(reloadPins);
@@ -106,7 +106,7 @@
     };
 
     var enableFilters = function () {
-      window.results = array.filter(function (value) {
+      window.results = offers.filter(function (value) {
         var isResult = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
         ((enabledFilters.rooms === 'any') || (getRoomsFilter(enabledFilters.rooms, value.offer.rooms))) &&

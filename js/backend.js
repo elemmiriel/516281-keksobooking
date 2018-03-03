@@ -9,14 +9,8 @@
 
   window.errorHandler = function (message) {
     var errorPopup = document.createElement('div');
-    var close = document.createElement('span');
     var messageText = document.createElement('div');
     messageText.textContent = message;
-    close.textContent = '\u00D7';
-    close.style.float = 'right';
-    close.style.fontSize = '30px';
-    close.style.cursor = 'pointer';
-
     messageText.style.position = 'relative';
     messageText.style.top = '15px';
 
@@ -32,16 +26,15 @@
     errorPopup.style.left = '40%';
     errorPopup.style.textAlign = 'center';
     errorPopup.style.fontSize = '18px';
-
-
-    document.querySelector('main').appendChild(errorPopup);
-    errorPopup.appendChild(close);
+    errorPopup.style.cursor = 'pointer';
     errorPopup.appendChild(messageText);
+    document.querySelector('main').appendChild(errorPopup);
 
-
-    close.addEventListener('click', function () {
+    var closeErrorPopup = function () {
       errorPopup.style.display = 'none';
-    });
+    };
+    errorPopup.addEventListener('click', closeErrorPopup);
+    window.setTimeout(closeErrorPopup, 5000);
   };
 
   window.download = function (onLoad, onError) {

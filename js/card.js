@@ -1,36 +1,23 @@
 'use strict';
 
 (function () {
-
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
   // Размеры попапа
   window.POPUP_WIDTH = 230;
   window.POPUP_MARGIN = 10;
 
-  window.isEscEvent = function (evt, func) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      func();
-    }
-  };
-
-  window.isEnterEvent = function (evt, func) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      func();
-    }
-  };
+  var PHOTOS_MAX_COUNT = 3;
+  var PHOTOS_HEIGHT = 70;
 
   var renderPhotos = function (element, renderingOffer) {
     var photosElement = element.querySelector('.popup__pictures');
-    if (renderingOffer.offer.photos.length > 3) {
-      renderingOffer.offer.photos.length = 3; // обрезаем лишние фото
+    if (renderingOffer.offer.photos.length > PHOTOS_MAX_COUNT) {
+      renderingOffer.offer.photos.length = PHOTOS_MAX_COUNT; // обрезаем лишние фото
     }
     for (var m = 0; m < renderingOffer.offer.photos.length; m++) {
       var li = photosElement.querySelector('li').cloneNode(true);
       li.querySelector('img').src = renderingOffer.offer.photos[m];
       li.querySelector('img').width = (window.POPUP_WIDTH - 2 * window.POPUP_MARGIN) / renderingOffer.offer.photos.length;
-      li.querySelector('img').height = 70;
+      li.querySelector('img').height = PHOTOS_HEIGHT;
       photosElement.append(li);
     }
     photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
