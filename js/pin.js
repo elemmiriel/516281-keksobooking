@@ -8,8 +8,8 @@
     var pinElement = pinTemplate.cloneNode(true);
     var pinIcon = pinElement.querySelector('.map__pin');
     pinIcon.querySelector('img').src = renderingOffer.author.avatar;
-    pinIcon.style.left = (renderingOffer.location.x - window.pinSize.WIDTH / 2) + 'px';
-    pinIcon.style.top = (renderingOffer.location.y - window.pinSize.HEIGHT) + 'px';
+    pinIcon.style.left = (renderingOffer.location.x - window.PinSize.WIDTH / 2) + 'px';
+    pinIcon.style.top = (renderingOffer.location.y - window.PinSize.HEIGHT) + 'px';
     pinIcon.value = window.buttonId;
     window.buttonId++;
     pinIcon.addEventListener('click', window.pinIconClickHandler);
