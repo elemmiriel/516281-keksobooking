@@ -111,12 +111,11 @@
 
     var enableFilters = function () {
       window.results = offers.filter(function (value) {
-        var isResult = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
+        return (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
         ((enabledFilters.rooms === 'any') || (getRoomsFilter(enabledFilters.rooms, value.offer.rooms))) &&
         ((enabledFilters.capacity === 'any') || (getGuestsFilter(enabledFilters.capacity, value.offer.guests)))) &&
         ((enabledFilters.features === []) || (getFeaturesFilter(value)));
-        return isResult;
       });
       window.results = window.results.slice(0, Math.min(window.SIMILAR_PIN_MAX_COUNT, window.results.length));
       return window.results;
