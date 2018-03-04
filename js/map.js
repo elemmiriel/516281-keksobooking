@@ -5,7 +5,7 @@
 
   window.MainPinSizes = {
     WIDTH: 65,
-    HEIGHT: 65
+    HEIGHT: 65 + 22 // с учётом хвостика after
   };
 
   window.PinSize = {

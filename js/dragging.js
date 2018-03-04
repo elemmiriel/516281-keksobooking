@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var MAP_MIN_X = 0 + (window.MainPinSizes.WIDTH / 2);
+  var MAP_MIN_X = window.MainPinSizes.WIDTH / 2;
   var MAP_MAX_X = 1200 - (window.MainPinSizes.WIDTH / 2);
   var MAP_MIN_Y = 150;
   var MAP_MAX_Y = 500;
