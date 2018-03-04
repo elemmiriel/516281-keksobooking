@@ -154,6 +154,15 @@
     window.resetFilters();
     document.querySelector('.map__pin--main').style.left = window.activatingCoords.x + 'px';
     document.querySelector('.map__pin--main').style.top = window.activatingCoords.y + 'px';
+    // Сбрасываем перемещения главного пина
+    window.mainPinCoords = {
+      x: mainPin.offsetLeft,
+      y: mainPin.offsetTop
+    };
+    window.startCoords = {
+      x: 0,
+      y: 0
+    };
     document.querySelector('.notice__preview').querySelector('img').src = 'img/muffin.png'; // удалить аватар
     var photoContainer = document.querySelector('.form__photo-container').querySelector('.form__photo');
     if (photoContainer) {

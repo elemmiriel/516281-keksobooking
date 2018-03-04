@@ -23,7 +23,7 @@
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      var startCoords = {
+      window.startCoords = {
         x: evt.clientX,
         y: evt.clientY
       };
@@ -32,11 +32,11 @@
         moveEvt.preventDefault();
 
         var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
+          x: window.startCoords.x - moveEvt.clientX,
+          y: window.startCoords.y - moveEvt.clientY
         };
 
-        startCoords = {
+        window.startCoords = {
           x: moveEvt.clientX,
           y: moveEvt.clientY
         };
