@@ -3,15 +3,9 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
-  // Диапазон значений для установки пина на карте
-  window.PIN_MIN_X = 300;
-  window.PIN_MAX_X = 900;
-  window.PIN_MIN_Y = 150;
-  window.PIN_MAX_Y = 500;
-
   window.MainPinSizes = {
-    WIDTH: 64,
-    HEIGHT: 70
+    WIDTH: 65,
+    HEIGHT: 65
   };
 
   window.PinSize = {

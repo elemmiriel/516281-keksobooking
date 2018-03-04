@@ -85,7 +85,6 @@
   var options = window.FormFields.CAPACITY.querySelectorAll('option');
   options[2].setAttribute('selected', 'true');
 
-
   var checkRoomsGuests = function () {
     var rooms = window.FormFields.ROOMS;
     var guests = window.FormFields.CAPACITY;
