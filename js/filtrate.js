@@ -2,6 +2,10 @@
 
 (function () {
   var FILTER_FORM = document.querySelector('.map__filters');
+
+  var PRICE_MIN = 10000;
+  var PRICE_MAX = 50000;
+
   var Filters = {
     TYPE: FILTER_FORM.querySelector('#housing-type'),
     PRICE: FILTER_FORM.querySelector('#housing-price'),
@@ -18,7 +22,7 @@
     features: []
   };
 
-  window.filtrate = function (array) {
+  window.filtrate = function (offers) {
     var changeTypeHandler = function (evt) {
       enabledFilters.type = evt.target.value;
       window.debounce(reloadPins);
@@ -27,11 +31,11 @@
     var getPriceFilter = function (value, price) {
       switch (value) {
         case 'low':
-          return (price < 10000);
+          return (price < PRICE_MIN);
         case 'middle':
-          return ((price >= 10000) && (price <= 50000));
+          return ((price >= PRICE_MIN) && (price <= PRICE_MAX));
         case 'high':
-          return (price > 50000);
+          return (price > PRICE_MAX);
         default:
           return true;
       }
@@ -95,32 +99,31 @@
       if (evt.target.className === '') { // Нужна проверка, так как кликаем на инпут и лейбл одновременно
         var target = evt.target;
         var feature = target.value;
-        var n = enabledFilters.features.indexOf(feature);
+        var index = enabledFilters.features.indexOf(feature);
         if (target.checked) {
           enabledFilters.features.push(feature);
         } else {
-          enabledFilters.features.splice(n, 1);
+          enabledFilters.features.splice(index, 1);
         }
       }
       window.debounce(reloadPins);
     };
 
-    var toFiltrate = function () {
-      window.results = array.filter(function (value) {
-        var isResult = (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
+    var enableFilters = function () {
+      window.results = offers.filter(function (value) {
+        return (((enabledFilters.type === 'any') || (value.offer.type === enabledFilters.type)) &&
         ((enabledFilters.price === 'any') || (getPriceFilter(enabledFilters.price, value.offer.price))) &&
         ((enabledFilters.rooms === 'any') || (getRoomsFilter(enabledFilters.rooms, value.offer.rooms))) &&
         ((enabledFilters.capacity === 'any') || (getGuestsFilter(enabledFilters.capacity, value.offer.guests)))) &&
         ((enabledFilters.features === []) || (getFeaturesFilter(value)));
-        return isResult;
       });
-      window.results = window.results.slice(0, Math.min(5, window.results.length));
+      window.results = window.results.slice(0, Math.min(window.SIMILAR_PIN_MAX_COUNT, window.results.length));
       return window.results;
     };
 
     var reloadPins = function () {
       window.removeElements();
-      window.setupPins(toFiltrate());
+      window.setupPins(enableFilters());
     };
 
     Filters.FEATURES.addEventListener('click', checkFeatureHandler);

@@ -39,7 +39,7 @@
   });
 
   // Тип жилья влияет на минимальную цену
-  var priceHandler = function () {
+  var priceChangeHandler = function () {
     if (window.FormFields.TYPE.selectedIndex === 1) {
       window.FormFields.PRICE.setAttribute('min', BUNGALO_MIN_PRICE);
     }
@@ -57,7 +57,7 @@
   // Цена за ночь
   window.FormFields.PRICE.setAttribute('required', 'true');
   window.FormFields.PRICE.setAttribute('max', PRICE_MAX_VALUE);
-  window.FormFields.PRICE.addEventListener('input', priceHandler);
+  window.FormFields.PRICE.addEventListener('input', priceChangeHandler);
   window.FormFields.PRICE.addEventListener('input', function (evt) {
     var target = evt.target;
     if (target.value > PRICE_MAX_VALUE) {
@@ -67,8 +67,7 @@
     }
   });
 
-
-  window.FormFields.TYPE.addEventListener('input', priceHandler);
+  window.FormFields.TYPE.addEventListener('input', priceChangeHandler);
 
   // Адрес заполняется автоматически
   window.FormFields.ADDRESS.setAttribute('disabled', 'true');
@@ -83,65 +82,38 @@
   });
 
   // Поле «Количество комнат» синхронизировано с полем «Количество гостей»
-  var optionsArray = window.FormFields.CAPACITY.querySelectorAll('option');
-  optionsArray[2].setAttribute('selected', 'true');
+  var options = window.FormFields.CAPACITY.querySelectorAll('option');
+  options[2].setAttribute('selected', 'true');
+
+  var checkRoomsGuests = function () {
+    var rooms = window.FormFields.ROOMS;
+    var guests = window.FormFields.CAPACITY;
+
+    var selectedRooms = rooms.selectedIndex;
+    var selectedGuests = guests.selectedIndex;
+    switch (selectedRooms) {
+      case 0:
+        return (selectedGuests === 2);
+      case 1:
+        return ((selectedGuests === 1) || (selectedGuests === 2));
+      case 2:
+        return ((selectedGuests === 0) || (selectedGuests === 1) || (selectedGuests === 2));
+      case 3:
+        return (selectedGuests === 3);
+      default:
+        return false;
+    }
+  };
 
   var selectClickHandler = function () {
-    if (window.FormFields.ROOMS.selectedIndex === 0) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].setAttribute('disabled', 'true');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
-      if ((window.FormFields.CAPACITY.selectedIndex === 0) || (window.FormFields.CAPACITY.selectedIndex === 1)) {
-        window.FormFields.CAPACITY.setCustomValidity('В 1 комнате может расположиться только 1 гость.');
-      } else {
-        if (window.FormFields.CAPACITY.selectedIndex === 3) {
-          window.FormFields.CAPACITY.setCustomValidity('Некорректное значение!');
-        } else {
-          window.FormFields.CAPACITY.setCustomValidity('');
-        }
-      }
-    }
-    if (window.FormFields.ROOMS.selectedIndex === 1) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].removeAttribute('disabled');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
-      if (window.FormFields.CAPACITY.selectedIndex === 0) {
-        window.FormFields.CAPACITY.setCustomValidity('В 2 комнатах могут расположиться не больше 2 гостей');
-      } else {
-        if (window.FormFields.CAPACITY.selectedIndex === 3) {
-          window.FormFields.CAPACITY.setCustomValidity('Некорректное значение!');
-        } else {
-          window.FormFields.CAPACITY.setCustomValidity('');
-        }
-      }
-    }
-    if (window.FormFields.ROOMS.selectedIndex === 2) {
-      optionsArray[0].removeAttribute('disabled');
-      optionsArray[1].removeAttribute('disabled');
-      optionsArray[2].removeAttribute('disabled');
-      optionsArray[2].setAttribute('selected', 'true');
-      optionsArray[3].setAttribute('disabled', 'true');
-      if (window.FormFields.CAPACITY.selectedIndex === 3) {
-        window.FormFields.CAPACITY.setCustomValidity('Некорректное значение!');
-      } else {
-        window.FormFields.CAPACITY.setCustomValidity('');
-      }
-    }
-    if (window.FormFields.ROOMS.selectedIndex === 3) {
-      optionsArray[0].setAttribute('disabled', 'true');
-      optionsArray[1].setAttribute('disabled', 'true');
-      optionsArray[2].setAttribute('disabled', 'true');
-      optionsArray[3].removeAttribute('disabled');
-      optionsArray[3].setAttribute('selected', 'true');
-      if (window.FormFields.CAPACITY.selectedIndex !== 3) {
-        window.FormFields.CAPACITY.setCustomValidity('Некорректное значение! Такое количество комнат не для гостей.');
-      } else {
-        window.FormFields.CAPACITY.setCustomValidity('');
-      }
+    // Проверка комнаты-гости
+    var isRoomsGuestsValid = checkRoomsGuests();
+    if (!isRoomsGuestsValid) {
+      window.FormFields.ROOMS.setCustomValidity('Некорректное значение! Проверьте кол-во комнат и гостей.');
+      window.FormFields.CAPACITY.setCustomValidity('Некорректное значение! Проверьте кол-во комнат и гостей.');
+    } else {
+      window.FormFields.ROOMS.setCustomValidity('');
+      window.FormFields.CAPACITY.setCustomValidity('');
     }
   };
   window.FormFields.ROOMS.addEventListener('click', selectClickHandler);
@@ -155,7 +127,7 @@
     window.disableMainPin();
   });
 
-  var successHandler = function () {
+  var successUploadHandler = function () {
     window.FormFields.NOTICE_FORM.reset();
     window.disableMainPin();
   };
@@ -164,7 +136,7 @@
   form.addEventListener('submit', function (evt) {
     // Для того, чтобы поле адрес отправился серверу, включаем его
     window.FormFields.ADDRESS.removeAttribute('disabled');
-    window.upload(new FormData(form), successHandler, window.errorHandler);
+    window.upload(new FormData(form), successUploadHandler, window.errorHandler);
     evt.preventDefault();
   });
 

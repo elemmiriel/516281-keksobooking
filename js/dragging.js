@@ -1,7 +1,9 @@
 'use strict';
 (function () {
-  var MAP_MIN_X = 0;
-  var MAP_MAX_X = 1200;
+  var MAP_MIN_X = 0 + (window.MainPinSizes.WIDTH / 2);
+  var MAP_MAX_X = 1200 - (window.MainPinSizes.WIDTH / 2);
+  var MAP_MIN_Y = 150;
+  var MAP_MAX_Y = 500;
 
   var mainPin = document.querySelector('.map__pin--main');
 
@@ -45,17 +47,17 @@
         };
 
         // Ограничим область установки пина
-        if (window.mainPinCoords.x > (MAP_MAX_X - window.MainPinSizes.WIDTH / 2)) {
-          window.mainPinCoords.x = (MAP_MAX_X - window.MainPinSizes.WIDTH / 2);
+        if (window.mainPinCoords.x > MAP_MAX_X) {
+          window.mainPinCoords.x = MAP_MAX_X;
         }
-        if (window.mainPinCoords.y > (window.PIN_MAX_Y + window.MainPinSizes.HEIGHT)) {
-          window.mainPinCoords.y = (window.PIN_MAX_Y + window.MainPinSizes.HEIGHT);
+        if (window.mainPinCoords.y > MAP_MAX_Y) {
+          window.mainPinCoords.y = MAP_MAX_Y;
         }
-        if (window.mainPinCoords.x < (MAP_MIN_X + window.MainPinSizes.WIDTH / 2)) {
-          window.mainPinCoords.x = (MAP_MIN_X + window.MainPinSizes.WIDTH / 2);
+        if (window.mainPinCoords.x < MAP_MIN_X) {
+          window.mainPinCoords.x = MAP_MIN_X;
         }
-        if (window.mainPinCoords.y < window.PIN_MIN_Y) {
-          window.mainPinCoords.y = window.PIN_MIN_Y;
+        if (window.mainPinCoords.y < MAP_MIN_Y) {
+          window.mainPinCoords.y = MAP_MIN_Y;
         }
 
 
