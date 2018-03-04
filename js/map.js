@@ -19,7 +19,7 @@
     HEIGHT: 70
   };
 
-  var MAX_COUNT = 5;
+  window.SIMILAR_PIN_MAX_COUNT = 5;
 
   var similarOffers;
 
@@ -129,8 +129,8 @@
       for (i = 0; i < filterArr.length; i++) {
         filterArr[i].removeAttribute('disabled');
       }
-      if (similarOffers.length > MAX_COUNT) {
-        var copy = similarOffers.slice(0, MAX_COUNT);
+      if (similarOffers.length > window.SIMILAR_PIN_MAX_COUNT) {
+        var copy = similarOffers.slice(0, window.SIMILAR_PIN_MAX_COUNT);
         window.setupPins(copy);
       } else {
         window.setupPins(similarOffers);

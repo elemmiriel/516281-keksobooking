@@ -18,7 +18,7 @@
       li.querySelector('img').src = renderingOffer.offer.photos[m];
       li.querySelector('img').width = (window.POPUP_WIDTH - 2 * window.POPUP_MARGIN) / renderingOffer.offer.photos.length;
       li.querySelector('img').height = PHOTOS_HEIGHT;
-      photosElement.append(li);
+      photosElement.appendChild(li);
     }
     photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
   };
