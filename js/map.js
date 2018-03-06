@@ -3,8 +3,10 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
+  window.SIMILAR_PIN_MAX_COUNT = 5;
+
   window.MainPinSizes = {
-    WIDTH: 65,
+    WIDTH: 66,
     HEIGHT: 65 + 22 // с учётом хвостика after
   };
 
@@ -12,8 +14,6 @@
     WIDTH: 50,
     HEIGHT: 70
   };
-
-  window.SIMILAR_PIN_MAX_COUNT = 5;
 
   var similarOffers;
 
@@ -39,14 +39,6 @@
     }
   };
 
-  var closePopup = function () {
-    var similarListElement = document.querySelector('.map__pins');
-    var articles = similarListElement.querySelector('article');
-    if (articles) {
-      similarListElement.removeChild(articles);
-    }
-  };
-
   // Обработчик отрисовки попапа по клику на пине
   window.pinIconClickHandler = function (evt) {
     var targetPin = evt.target;
@@ -54,7 +46,15 @@
     var index = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
-    closePopup();
+    var closePopup = function () {
+      var articles = similarListElement.querySelector('article');
+      if (articles) {
+        similarListElement.removeChild(articles);
+      }
+      closeButton.removeEventListener('click', closePopup);
+      closeButton.removeEventListener('keydown', closeKeyEnterHandler);
+      document.removeEventListener('keydown', closeKeyEscHandler);
+    };
     if (typeof window.results === 'undefined') {
       fragment.appendChild(window.renderPopup(similarOffers[index])); // фильтр не установлен
     } else {
@@ -71,7 +71,7 @@
     };
     var closeKeyEscHandler = function (evtKey) {
       isEscEvent(evtKey, closePopup);
-      document.removeEventListener('keydown', closeKeyEnterHandler);
+      document.removeEventListener('keydown', closeKeyEscHandler);
     };
     closeButton.addEventListener('keydown', closeKeyEnterHandler);
     document.addEventListener('keydown', closeKeyEscHandler);

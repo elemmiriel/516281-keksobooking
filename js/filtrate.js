@@ -6,6 +6,13 @@
   var PRICE_MIN = 10000;
   var PRICE_MAX = 50000;
 
+  var ONE_GUEST = 1;
+  var TWO_GUESTS = 2;
+
+  var ONE_ROOM = 1;
+  var TWO_ROOMS = 2;
+  var THREE_ROOMS = 3;
+
   var Filters = {
     TYPE: FILTER_FORM.querySelector('#housing-type'),
     PRICE: FILTER_FORM.querySelector('#housing-price'),
@@ -49,11 +56,11 @@
     var getRoomsFilter = function (value, rooms) {
       switch (value) {
         case '1':
-          return (rooms === 1);
+          return (rooms === ONE_ROOM);
         case '2':
-          return (rooms === 2);
+          return (rooms === TWO_ROOMS);
         case '3':
-          return (rooms === 3);
+          return (rooms === THREE_ROOMS);
         default:
           return true;
       }
@@ -67,9 +74,9 @@
     var getGuestsFilter = function (value, guests) {
       switch (value) {
         case '1':
-          return (guests === 1);
+          return (guests === ONE_GUEST);
         case '2':
-          return (guests === 2);
+          return (guests === TWO_GUESTS);
         default:
           return true;
       }

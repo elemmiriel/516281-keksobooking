@@ -1,11 +1,10 @@
 'use strict';
 
 (function () {
-  var loader = document.createElement('script');
-  loader.src = 'https://js.dump.academy/keksobooking/data';
-
-  var uploader = document.createElement('script');
-  uploader.src = 'https://js.dump.academy/keksobooking';
+  var DOWN_URL = 'https://js.dump.academy/keksobooking/data';
+  var UP_URL = 'https://js.dump.academy/keksobooking';
+  var NETWORK_TIMEOUT = 10000;
+  var ERROR_TIMEOUT = 5000;
 
   window.errorHandler = function (message) {
     var errorPopup = document.createElement('div');
@@ -34,14 +33,14 @@
       errorPopup.style.display = 'none';
     };
     errorPopup.addEventListener('click', closeErrorPopup);
-    window.setTimeout(closeErrorPopup, 5000);
+    window.setTimeout(closeErrorPopup, ERROR_TIMEOUT);
   };
 
   window.download = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', loader.src);
+    xhr.open('GET', DOWN_URL);
     xhr.send();
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = NETWORK_TIMEOUT; // 10s
 
     xhr.addEventListener('load', function () {
       var error;
@@ -77,9 +76,9 @@
 
   window.upload = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', uploader.src);
+    xhr.open('POST', UP_URL);
     xhr.send(data);
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = NETWORK_TIMEOUT; // 10s
 
     xhr.addEventListener('load', function () {
       var error;
