@@ -11,6 +11,21 @@
   var HOUSE_MIN_PRICE = 5000;
   var PALACE_MIN_PRICE = 10000;
 
+  var FLAT_INDEX = 0;
+  var BUNGALO_INDEX = 1;
+  var HOUSE_INDEX = 2;
+  var PALACE_INDEX = 3;
+
+  var ONE_ROOMS_INDEX = 0;
+  var TWO_ROOMS_INDEX = 1;
+  var THREE_ROOMS_INDEX = 2;
+  var HUNDRED_ROOMS_INDEX = 3;
+
+  var THREE_GUESTS_INDEX = 0;
+  var TWO_GUESTS_INDEX = 1;
+  var ONE_GUESTS_INDEX = 2;
+  var NO_GUESTS_INDEX = 3;
+
   window.FormFields = {
     NOTICE_FORM: document.querySelector('.notice__form'),
     FIELDSET: document.querySelector('.notice__form').querySelectorAll('fieldset'),
@@ -40,16 +55,16 @@
 
   // Тип жилья влияет на минимальную цену
   var priceChangeHandler = function () {
-    if (window.FormFields.TYPE.selectedIndex === 1) {
+    if (window.FormFields.TYPE.selectedIndex === BUNGALO_INDEX) {
       window.FormFields.PRICE.setAttribute('min', BUNGALO_MIN_PRICE);
     }
-    if (window.FormFields.TYPE.selectedIndex === 0) {
+    if (window.FormFields.TYPE.selectedIndex === FLAT_INDEX) {
       window.FormFields.PRICE.setAttribute('min', FLAT_MIN_PRICE);
     }
-    if (window.FormFields.TYPE.selectedIndex === 2) {
+    if (window.FormFields.TYPE.selectedIndex === HOUSE_INDEX) {
       window.FormFields.PRICE.setAttribute('min', HOUSE_MIN_PRICE);
     }
-    if (window.FormFields.TYPE.selectedIndex === 3) {
+    if (window.FormFields.TYPE.selectedIndex === PALACE_INDEX) {
       window.FormFields.PRICE.setAttribute('min', PALACE_MIN_PRICE);
     }
   };
@@ -92,14 +107,14 @@
     var selectedRooms = rooms.selectedIndex;
     var selectedGuests = guests.selectedIndex;
     switch (selectedRooms) {
-      case 0:
-        return (selectedGuests === 2);
-      case 1:
-        return ((selectedGuests === 1) || (selectedGuests === 2));
-      case 2:
-        return ((selectedGuests === 0) || (selectedGuests === 1) || (selectedGuests === 2));
-      case 3:
-        return (selectedGuests === 3);
+      case ONE_ROOMS_INDEX:
+        return (selectedGuests === ONE_GUESTS_INDEX);
+      case TWO_ROOMS_INDEX:
+        return ((selectedGuests === TWO_GUESTS_INDEX) || (selectedGuests === ONE_GUESTS_INDEX));
+      case THREE_ROOMS_INDEX:
+        return ((selectedGuests === THREE_GUESTS_INDEX) || (selectedGuests === TWO_GUESTS_INDEX) || (selectedGuests === ONE_GUESTS_INDEX));
+      case HUNDRED_ROOMS_INDEX:
+        return (selectedGuests === NO_GUESTS_INDEX);
       default:
         return false;
     }

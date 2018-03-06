@@ -88,14 +88,14 @@
       return img;
     };
 
-    var photosHandler = function () {
+    var photosChangeHandler = function () {
       var files = photoChooser.files;
       for (var i = 0; i < files.length; i++) {
         fragment.appendChild(uploadPhoto(files[i]));
       }
       block.appendChild(fragment);
     };
-    photoChooser.addEventListener('change', photosHandler);
+    photoChooser.addEventListener('change', photosChangeHandler);
 
     dropZone.addEventListener('dragover', function (evt) {
       evt.preventDefault();
