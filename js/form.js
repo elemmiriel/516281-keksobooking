@@ -149,9 +149,14 @@
 
   var form = window.FormFields.NOTICE_FORM;
   form.addEventListener('submit', function (evt) {
-    // Для того, чтобы поле адрес отправился серверу, включаем его
+    // Для того, чтобы адрес отправился серверу, включаем его
     window.FormFields.ADDRESS.removeAttribute('disabled');
-    window.upload(new FormData(form), successUploadHandler, window.errorHandler);
+    if (checkRoomsGuests) {
+      window.upload(new FormData(form), successUploadHandler, window.errorHandler);
+    } else {
+      window.FormFields.ROOMS.setCustomValidity('Некорректное значение! Проверьте кол-во комнат и гостей.');
+      window.FormFields.CAPACITY.setCustomValidity('Некорректное значение! Проверьте кол-во комнат и гостей.');
+    }
     evt.preventDefault();
   });
 
