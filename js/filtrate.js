@@ -88,18 +88,17 @@
     };
 
     var getFeaturesFilter = function (value) {
-      if (enabledFilters.features.length === 0) {
-        return true;
-      } else {
-        var count = 0;
-        var offerFeatures = value.offer.features;
-        for (var i = 0; i < enabledFilters.features.length; i++) {
-          if (offerFeatures.indexOf(enabledFilters.features[i]) >= 0) {
-            count++;
-          }
+      var offerFeatures = value.offer.features;
+      var find = function (features, valueFeature) {
+        return features.indexOf(valueFeature);
+      };
+      for (var i = 0; i < enabledFilters.features.length; i++) {
+        var index = find(offerFeatures, enabledFilters.features[i]);
+        if (index < 0) {
+          return false;
         }
-        return (count === enabledFilters.features.length);
       }
+      return true;
     };
 
     var checkFeatureHandler = function (evt) {

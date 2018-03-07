@@ -2,8 +2,8 @@
 (function () {
   var MAP_MIN_X = window.MainPinSizes.WIDTH / 2;
   var MAP_MAX_X = 1200 - (window.MainPinSizes.WIDTH / 2);
-  var MAP_MIN_Y = 150;
-  var MAP_MAX_Y = 500;
+  var MAP_MIN_Y = 150 - window.MainPinSizes.HEIGHT;
+  var MAP_MAX_Y = 500 - window.MainPinSizes.HEIGHT;
 
   var mainPin = document.querySelector('.map__pin--main');
 

@@ -6,13 +6,13 @@
   window.SIMILAR_PIN_MAX_COUNT = 5;
 
   window.MainPinSizes = {
-    WIDTH: 66,
-    HEIGHT: 65 + 22 // с учётом хвостика after
+    WIDTH: 62,
+    HEIGHT: 62 / 2
   };
 
   window.PinSize = {
     WIDTH: 50,
-    HEIGHT: 70
+    HEIGHT: 40 / 2
   };
 
   var similarOffers;
@@ -39,6 +39,14 @@
     }
   };
 
+  var closePopup = function () {
+    var similarListElement = document.querySelector('.map__pins');
+    var articles = similarListElement.querySelector('article');
+    if (articles) {
+      similarListElement.removeChild(articles);
+    }
+  };
+
   // Обработчик отрисовки попапа по клику на пине
   window.pinIconClickHandler = function (evt) {
     var targetPin = evt.target;
@@ -46,15 +54,7 @@
     var index = targetPin.firstChild ? targetPin.value : targetPin.parentElement.value;
     var fragment = document.createDocumentFragment();
     var similarListElement = document.querySelector('.map__pins');
-    var closePopup = function () {
-      var articles = similarListElement.querySelector('article');
-      if (articles) {
-        similarListElement.removeChild(articles);
-      }
-      closeButton.removeEventListener('click', closePopup);
-      closeButton.removeEventListener('keydown', closeKeyEnterHandler);
-      document.removeEventListener('keydown', closeKeyEscHandler);
-    };
+    closePopup();
     if (typeof window.results === 'undefined') {
       fragment.appendChild(window.renderPopup(similarOffers[index])); // фильтр не установлен
     } else {
@@ -63,16 +63,25 @@
     similarListElement.appendChild(fragment);
 
     var closeButton = document.querySelector('.map__pins').querySelector('.popup__close');
-    closeButton.addEventListener('click', closePopup);
-
+    var closeClickHandler = function () {
+      closePopup();
+      closeButton.removeEventListener('keydown', closeKeyEnterHandler);
+      closeButton.removeEventListener('click', closeClickHandler);
+      document.removeEventListener('keydown', closeKeyEscHandler);
+    };
     var closeKeyEnterHandler = function (evtKey) {
       isEnterEvent(evtKey, closePopup);
       closeButton.removeEventListener('keydown', closeKeyEnterHandler);
+      closeButton.removeEventListener('click', closeClickHandler);
+      document.removeEventListener('keydown', closeKeyEscHandler);
     };
     var closeKeyEscHandler = function (evtKey) {
       isEscEvent(evtKey, closePopup);
+      closeButton.removeEventListener('keydown', closeKeyEnterHandler);
+      closeButton.removeEventListener('click', closeClickHandler);
       document.removeEventListener('keydown', closeKeyEscHandler);
     };
+    closeButton.addEventListener('click', closeClickHandler);
     closeButton.addEventListener('keydown', closeKeyEnterHandler);
     document.addEventListener('keydown', closeKeyEscHandler);
   };
